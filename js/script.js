@@ -1,4 +1,6 @@
-
+  
+  
+  
   ///////////////
  // SearchBar //
 ///////////////
@@ -18,34 +20,22 @@ header.insertAdjacentHTML("beforeend", SearchBarHtml);
 //////////////////////////
 
 // Checks if a student name or email matches searchinput before adding the student to the studentList.
-
 const studentList = document.querySelector('.student-list');
+const searchInput = document.getElementById('search');
+const pageinationDiv = document.querySelector('.pagination');
+let newDataArray = [];
 
 function searchfunction(list){
-   const searchInput = document.getElementById('search');
    const inputValue = searchInput.value.toLowerCase();
-
-
-   studentList.innerHTML = '';
-
-   for (let i = 0; i < list.length; i++) {
-      if (list[i].name.first.toLowerCase().includes(inputValue) || list[i].name.last.toLowerCase().includes(inputValue) || list[i].email.toLowerCase().includes(inputValue)) {
-         const html = `
-         <li class="student-item cf">
-         <div class="student-details">
-           <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
-           <h3>${list[i].name.first} ${list[i].name.last}</h3>
-           <span class="email">${list[i].email}</span>
-         </div>
-         <div class="joined-details">
-           <span class="date">Joined ${list[i].registered.date}</span>
-         </div>
-       </li>
-      `;
-      studentList.insertAdjacentHTML("beforeend", html);
-      }
-   }
+   newDataArray = data.filter( list => {
+      if (list.name.first.toLowerCase().includes(inputValue) || list.name.last.toLowerCase().includes(inputValue) || list.email.toLowerCase().includes(inputValue)) {
+         return true;
+      };
+   });
+      showPage(newDataArray, 1)
+      addPagination(newDataArray)
 }
+
 
  // calls searchfunction when a user clicks on the searchbutton
 document.addEventListener('click', (e) => {
@@ -55,56 +45,66 @@ document.addEventListener('click', (e) => {
    }
 });
 
+
   //////////////////
  // StudentList //
 ////////////////
-
-
 
 // Creates a list of students and appends the list to the page. 
 function showPage(list, page) {
    studentList.innerHTML = '';
    const startIndex = (page * 9) - 9;
    endIndex = page * 9;
-
-   for (let i = 0; i < list.length; i++) {
-      if (i >= startIndex && i < endIndex) {
-         const html = `
-         <li class="student-item cf">
-         <div class="student-details">
-           <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
-           <h3>${list[i].name.first} ${list[i].name.last}</h3>
-           <span class="email">${list[i].email}</span>
-         </div>
-         <div class="joined-details">
-           <span class="date">Joined ${list[i].registered.date}</span>
-         </div>
-       </li>
+   if (list.length !== 0) { //Checks that list is not empty before creating list items.
+      for (let i = 0; i < list.length; i++) {
+         if (i >= startIndex && i < endIndex) {
+            const html = `
+            <li class="student-item cf">
+            <div class="student-details">
+            <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
+            <h3>${list[i].name.first} ${list[i].name.last}</h3>
+            <span class="email">${list[i].email}</span>
+            </div>
+            <div class="joined-details">
+            <span class="date">Joined ${list[i].registered.date}</span>
+            </div>
+         </li>
+         `;
+         studentList.insertAdjacentHTML("beforeend", html);
+      }
+      }
+   } else { // Appends a "no result" text if the list is empty.
+      const html = `
+      <li class="student-item cf">
+      <div>
+      <h3>No results found</h3>
+      </div>
+      </li>
       `;
       studentList.insertAdjacentHTML("beforeend", html);
    }
-   }
 }
-
 
   /////////////////
  // Pageination //
 /////////////////
 
 const linkList = document.querySelector('.link-list');
-linkList.innerHTML = '';
 
 // Creates list elements / pagebuttons and appends the buttons to the site. 
 function addPagination(list) {
    const numOfPages = Math.ceil(list.length / 9);
+   linkList.innerHTML = '';
    for (let i = 0; i < numOfPages; i++) {
       linkList.innerHTML += `
       <li>
-      <button type="button">${i+1}</button>
+      <button class="pageBtn" type="button">${i+1}</button>
     </li>`;
    }
-   const firstButton = document.querySelector('button');
-   firstButton.classList.add('active')
+   const firstButton = document.querySelector('.pageBtn');
+   if (firstButton !== null) { // Prevents error when no searchresult is found 
+      firstButton.classList.add('active')
+   }
 }
 
 // Listens for button clicks, removes active from all buttons and adds the active class to the clicktarget.
@@ -119,7 +119,11 @@ linkList.addEventListener('click', (e) => {
       clickTarget.classList.add('active');
       pageNum = clickTarget.innerHTML;
    }
-   showPage(data, pageNum)
+   if (searchInput.value === '') {
+      showPage(data, pageNum)
+   } else {
+      showPage(newDataArray, pageNum)
+   }
 });
 
   ////////////////////
