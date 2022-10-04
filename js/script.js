@@ -1,6 +1,3 @@
-  
-  
-  
   ///////////////
  // SearchBar //
 ///////////////
@@ -22,7 +19,6 @@ header.insertAdjacentHTML("beforeend", SearchBarHtml);
 // Checks if a student name or email matches searchinput before adding the student to the studentList.
 const studentList = document.querySelector('.student-list');
 const searchInput = document.getElementById('search');
-const pageinationDiv = document.querySelector('.pagination');
 let newDataArray = [];
 
 function searchfunction(list){
@@ -30,18 +26,18 @@ function searchfunction(list){
    newDataArray = data.filter( list => {
       if (list.name.first.toLowerCase().includes(inputValue) || list.name.last.toLowerCase().includes(inputValue) || list.email.toLowerCase().includes(inputValue)) {
          return true;
-      };
+      }
    });
-      showPage(newDataArray, 1)
-      addPagination(newDataArray)
+      showPage(newDataArray, 1);
+      addPagination(newDataArray);
 }
 
 
  // calls searchfunction when a user clicks on the searchbutton
 document.addEventListener('click', (e) => {
    const clickTarget = e.target;
-   if (e.target.id === 'searchbtn' || e.target.id === 'searchBtnImg') {
-      searchfunction(data)
+   if (clickTarget.id === 'searchbtn' || clickTarget.id === 'searchBtnImg') {
+      searchfunction(data);
    }
 });
 
@@ -54,7 +50,7 @@ document.addEventListener('click', (e) => {
 function showPage(list, page) {
    studentList.innerHTML = '';
    const startIndex = (page * 9) - 9;
-   endIndex = page * 9;
+   const endIndex = page * 9;
    if (list.length !== 0) { //Checks that list is not empty before creating list items.
       for (let i = 0; i < list.length; i++) {
          if (i >= startIndex && i < endIndex) {
@@ -103,7 +99,7 @@ function addPagination(list) {
    }
    const firstButton = document.querySelector('.pageBtn');
    if (firstButton !== null) { // Prevents error when no searchresult is found 
-      firstButton.classList.add('active')
+      firstButton.classList.add('active');
    }
 }
 
@@ -111,18 +107,18 @@ function addPagination(list) {
 // Calls the showPage function to update the page. 
 linkList.addEventListener('click', (e) => {
    const clickTarget = e.target;
-   const pageBtn = document.querySelectorAll('.link-list button');
+   const pageBtn = document.querySelectorAll('.link-list .pageBtn');
    let pageNum = 1;
-
-   if (clickTarget.type === "button") {
+   console.log(clickTarget);
+   if (clickTarget.classList.contains('pageBtn')) {
       pageBtn.forEach(element => element.classList.remove('active'));
       clickTarget.classList.add('active');
       pageNum = clickTarget.innerHTML;
-   }
-   if (searchInput.value === '') {
-      showPage(data, pageNum)
-   } else {
-      showPage(newDataArray, pageNum)
+      if (searchInput.value === '') {
+         showPage(data, pageNum);
+      } else {
+         showPage(newDataArray, pageNum);
+      }
    }
 });
 
@@ -131,4 +127,4 @@ linkList.addEventListener('click', (e) => {
 ////////////////////
 
 showPage(data, 1);
-addPagination(data) 
+addPagination(data);
