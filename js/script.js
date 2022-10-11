@@ -4,13 +4,13 @@
 
 // Append a searchbar
 const header = document.querySelector('.header');
-const SearchBarHtml = `
+const searchBarHtml = `
    <label for="search" class="student-search">
    <span>Search by name</span>
    <input id="search" onkeyup="searchfunction(data)" placeholder="Search by name...">
    <button id ="searchbtn" type="button"><img id="searchBtnImg" src="img/icn-search.svg" alt="Search icon"></button>
    </label>`;
-header.insertAdjacentHTML("beforeend", SearchBarHtml);
+header.insertAdjacentHTML("beforeend", searchBarHtml);
 
   //////////////////////////
  // Search functionality //
